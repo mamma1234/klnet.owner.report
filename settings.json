@@ -1,0 +1,36 @@
+{
+    "reports":{
+        "carrier": {
+            "jrxml": "/jrxml/SCRAP/PGSQL_1.jrxml"
+        },
+        "bl_docu": {
+            "jrxml": "/jrxml/BL/BL_REPORT2.jrxml"
+        },
+        "test": {
+            "jrxml": "/jrxml/test.jrxml"
+        }
+    },
+    "drivers": {
+        "postgresql": {
+            "path": "/libs/postgresql-42.2.1.jar",
+            "class": "org.postgresql.Driver"
+        },
+        "oracle": {
+            "path": "/libs/ojdbc-14.jar",
+            "class": "oracle.jdbc.driver.OracleDriver"
+        }
+        
+    },
+    "connections": {
+        "pgsql": {
+            "jdbc": "jdbc:postgresql://172.19.1.22:5432/owner",
+            "user": "owner",
+            "password": "!ghkwn_20"
+        },
+        "kbill": {
+            "jdbc": "jdbc:oracle:thin:@//172.19.1.103:7527/ORAKLDB",
+            "user": "klnet",
+            "password": "qlfflddjqan_1"
+        }
+    }
+}

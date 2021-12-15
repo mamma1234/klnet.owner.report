@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <style>
+            .pdfobject-container {
+                height: 95%;
+                width: 95%;
+            }
+            .pdfobject{border: 1px solid #666;}
+            .btn_img img {
+                -webkit-transform:scale(1);
+                -moz-transform: scale(1);
+                -ms-transform: scale(1);
+                -o-transform: scale(1);
+                transform: scale(1);
+                -webkit-transition: 0.5s;
+                -moz-transition: 0.5s;
+                -o-transition: 0.5s;
+                transition: 0.5s;
+            }
+            .btn_img:hover img {
+                -webkit-transform:scale();
+                -moz-transform: scale(1.2);
+                -ms-transform: scale(1.2);
+                -o-transform: scale(1.2);
+                transform: scale(1.2);
+            }
+        </style>
+        <script src="/report/js/jquery-3.6.0.slim.js" ></script>
+        <script type="text/javascript" src="/report/js/pdfobject/2.2.4/pdfobject.min.js"></script>
+        <script src="/report/js/bootstrap/3.3.2/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/report/css/4.5.2/bootstrap.min.css">
+        <% if( report ) {%>
+        <script type="text/javascript">
+
+            // Onload 처리
+            window.onload = function() {
+                fncReportViewer();
+                // $("#content").html('C:\Users\User\Downloads\downloadFile (1).html');
+            }
+
+            function fncReportViewer() {
+                try{
+                    const jasper = JSON.parse('<%- JSON.stringify(report) %>');
+                    // console.log(jasper)
+                    if( '' == jasper.file_id ) {
+                        alert("id 값이 정의되지 않았습니다. 다시 확인하세요.");
+                        return false;
+                    }
+                    if( '' == jasper.file_path ) {
+                        alert("path 값이 정의되지 않았습니다. 다시 확인하세요.");
+                        return false;
+                    }
+                    if( '' == jasper.file_type ) {
+                        alert("file_type 값이 정의되지 않았습니다. 다시 확인하세요.");
+                        return false;
+                    }
+                    if( '' == jasper.connection ) {
+                        alert("connection 값이 정의되지 않았습니다. 다시 확인하세요.");
+                        return false;
+                    }
+
+                    let url = '/report/generate_'+jasper.file_type;
+                    let options = {
+                        method:'POST',
+                        url:'/report/generate_'+jasper.file_type,
+                        headers:{
+                            'cache-control':'no-cache',
+                            'content-type':'application/json'
+                        },
+                        body:JSON.stringify({
+                            system_id: jasper.system_id,
+                            user_id: jasper.user_id,
+                            file_path: jasper.file_path,
+                            file_id: jasper.file_id,
+                            connection: jasper.connection,
+                            parameters: jasper.parameters,
+                            responseType: 'blob'
+                        })
+                    }
+                    // console.log(options);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/report/generate_'+jasper.file_type, true);
+                    xhr.timeout = 60*1000;
+                    xhr.responseType = 'blob';
+                    
+                    xhr.onload = function() {
+                        const contentType = xhr.getResponseHeader('Content-Type');
+                        const blob = new Blob([this.response], {type:'application/pdf'});
+                        // const url = window.URL || window.webktURL;
+                        const fileUrl = URL.createObjectURL(blob);
+                        
+                        const viewer = $("#content");
+                        const options = {
+                            url: fileUrl,
+                            originalUrl: jasper.name+'.pdf',
+                            src: jasper.name,
+                            pdfOpenParams: {
+                                zoom: 47,
+                                toolbar: 1,
+                                // statusbar: 1,
+                                // messages: 0,
+                                // navpanes: 0
+
+                            }
+                        }
+                        // console.log(options);
+                        PDFObject.embed(fileUrl, viewer, options);
+                    }
+                    var params = JSON.stringify({
+                        // name:file_id,
+                        // file_path:full_path,
+                        system_id: jasper.system_id,
+                        user_id: jasper.user_id,
+                        file_path: jasper.file_path,
+                        file_id: jasper.file_id,
+                        connection:jasper.connection,
+                        parameters:jasper.parameters,
+                        responseType:'blob'
+                    });
+                    xhr.setRequestHeader('Content-Type','application/json');
+                    xhr.send(params);
+                } catch( error ) {
+                    // console.log(error)
+                    alert("오류가 발생했습니다.");
+                    return false;
+                }
+            }
+
+            // let file_type = 'pdf';
+            function fncDownload( params ) {
+                const jasper = JSON.parse('<%- JSON.stringify(report) %>');
+                // jasper.file_type = file_type
+                jasper.file_type = params
+                // console.log( jasper );
+                try{
+                    
+                    if( '' == jasper.file_path ) {
+                        alert("file_path 값이 정의되지 않았습니다. 다시 확인하세요.");
+                        return false;
+                    }
+                    if( '' == jasper.file_type ) {
+                        alert("file_type 값이 정의되지 않았습니다. 다시 확인하세요.");
+                        return false;
+                    }
+                    if( '' == jasper.connection ) {
+                        alert("connection 값이 정의되지 않았습니다. 다시 확인하세요.");
+                        return false;
+                    }
+
+                    let url = '/report/generate_'+jasper.file_type;
+                    let options = {
+                        method:'POST',
+                        url:'/report/generate_'+jasper.file_type,
+                        headers:{
+                            'cache-control':'no-cache',
+                            'content-type':'application/json'
+                        },
+                        body:JSON.stringify({
+                            // name:file_id,
+                            // file_path:full_path,
+                            system_id: jasper.system_id,
+                            user_id: jasper.user_id,
+                            file_path: jasper.file_path,
+                            file_id: jasper.file_id,
+                            connection:jasper.connection,
+                            parameters:jasper.parameters,
+                            responseType:'blob'
+                        })
+                    }
+
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/report/generate_'+jasper.file_type, true);
+                    xhr.timeout = 60*1000;
+                    xhr.responseType = 'blob';
+                    // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.onload = function() {
+                        const contentType = xhr.getResponseHeader('Content-Type');
+                        const blob = new Blob([this.response], {type:contentType});
+
+                        const url = window.URL || window.webktURL;
+                        const fileUrl = url.createObjectURL(blob);
+                        const anchor = document.createElement('a');
+
+                        if( typeof anchor.download === 'undefined' ) {
+                            window.location = fileUrl;
+                        } else {
+                            anchor.href = fileUrl;
+                            anchor.download = jasper.name+'.'+jasper.file_type;
+                            document.body.appendChild(anchor);
+                            anchor.click();
+                        }
+
+                        setTimeout(function() {
+                            url.revokeObjectURL(fileUrl);
+                            $(anchor).remove();
+                        }, 100);
+                    }
+                    var params = JSON.stringify({
+                            // name:file_id,
+                            // file_path:full_path,
+                            system_id: jasper.system_id,
+                            user_id: jasper.user_id,
+                            file_path: jasper.file_path,
+                            file_id: jasper.file_id,
+                            connection:jasper.connection,
+                            parameters:jasper.parameters,
+                            responseType:'blob'
+                        });
+                    xhr.setRequestHeader('Content-Type','application/json');
+                    xhr.send(params);
+                } catch( error ) {
+                    alert("JSON 형태가 아닙니다. 다시 확인하세요.");
+                    return false;
+                }
+            }
+
+            
+            function fncConfirm( params ) {
+                file_type = params;
+                $("#confirm").modal('show');
+                $("#confirm").attr('aria-hidden','false');
+                // fncDownload
+            }
+
+            $("#btn_confirm").on("click", function(){
+                fncDownload();
+                $("#confirm").modal('hide');
+            });
+            $("#btn_cancel").on("click", function(){
+                // fncDownload();
+                $("#confirm").modal('hide');
+            });
+        </script>
+        <% } %>
+    </head>
+    <title>
+        Viewer
+    </title>
+    <main>
+        <div class="bg-light me-md-3 pt-3 px-3 px-md-5 text-center overflow-hidden">
+            <!-- <div class="my-3 py-3">
+                <h2 class="display-5">미리보기</h2>
+                <h2 class="laed"><%= report.file_id%></h2>
+            </div> -->
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <img width="40px" src="/report/image/file.svg" alt="미리보기" ></img>
+                </h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <!-- <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fncReportViewer()">PDF</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fncDownload('pptx')">PPT</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fncDownload('docx')">DOC</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fncDownload('odt')">ODT</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fncDownload('rtf')">RTF</button> -->
+                        <div class="btn_img" onclick="fncDownload('pdf')">
+                            <img width="40px" src="/report/image/pdf-file-format-symbol.svg" alt="PDF"></img>
+                        </div>
+                        <div class="btn_img" onclick="fncDownload('pptx')">
+                            <img width="40px" src="/report/image/ppt-file-format.svg" alt="PPT"></img>
+                        </div>
+                        <div class="btn_img" onclick="fncDownload('docx')">
+                            <img width="40px" src="/report/image/docx-file-format.svg" alt="Word"></img>
+                        </div>
+                        <!-- <div class="btn_img" onclick="fncDownload('xlsx')">
+                            <img width="40px" src="/image/xlsx-file-format.svg" alt="EXEL"></img>
+                        </div> -->
+                        <div class="btn_img" onclick="fncDownload('odt')">
+                            <img width="40px" src="/report/image/odt-file-format-symbol.svg" alt="ODT"></img>
+                        </div>
+                        <div class="btn_img" onclick="fncDownload('rtf')">
+                            <img width="40px" src="/report/image/rtf-icon-format.svg" alt="RTF"></img>
+                        </div>
+                    </div>
+                </div>
+                <!-- <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                    <span data-feader="calendar"></span>
+                    This week
+                </button> -->
+            </div>
+            <div class="bg-dark shadow-sm mx-auto" style="width: 98%; height: 700px; border-radius: 10px 10px 10px 10px;">
+                <div class="mx-auto pt-4" id="content">
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="confirm">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="modal-label">다운로드 하시겠습니까?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="btn_confirm">Download</button>
+                        <button type="button" class="btn btn-default" id="btn_cancel">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</html>

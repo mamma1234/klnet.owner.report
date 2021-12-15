@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BL_REPORT2" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="025d2daa-5f86-441b-9a21-e47840398eb9">
+	<property name="ireport.zoom" value="1.3310000000000037"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="cntr_list" uuid="a192c27d-daab-484c-a672-f42481f50787">
+		<parameter name="req_seq" class="java.lang.String"/>
+		<parameter name="bl_bkg" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select cntr_no
+      ,dem_date
+      ,dem_amount||dem_unit as dem_total
+  from own_dem_det
+ where req_seq = $P{req_seq}
+   and bl_bkg = $P{bl_bkg}]]>
+		</queryString>
+		<field name="cntr_no" class="java.lang.String"/>
+		<field name="dem_date" class="java.lang.String"/>
+		<field name="dem_total" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="req_seq" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="bl_bkg" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select bl_bkg
+      ,ie_type
+      ,vsl_name
+      ,voyage
+      ,pol
+      ,pol_atd
+      ,pol_atd_time
+      ,pod
+      ,pod_ata
+      ,pod_ata_time
+      ,last_current
+  from own_tracking_bl_new
+ where req_seq = $P{req_seq}
+   and bl_bkg = $P{bl_bkg}]]>
+	</queryString>
+	<field name="bl_bkg" class="java.lang.String"/>
+	<field name="ie_type" class="java.lang.String"/>
+	<field name="vsl_name" class="java.lang.String"/>
+	<field name="voyage" class="java.lang.String"/>
+	<field name="pol" class="java.lang.String"/>
+	<field name="pol_atd" class="java.lang.String"/>
+	<field name="pol_atd_time" class="java.lang.String"/>
+	<field name="pod" class="java.lang.String"/>
+	<field name="pod_ata" class="java.lang.String"/>
+	<field name="pod_ata_time" class="java.lang.String"/>
+	<field name="last_current" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="802" splitType="Stretch">
+			<line>
+				<reportElement x="317" y="143" width="1" height="659" uuid="34446722-ae62-4e05-bdb4-916ef48ca497"/>
+			</line>
+			<line>
+				<reportElement x="234" y="1" width="1" height="142" uuid="6239c500-7043-4797-b6ea-babb096756c1"/>
+			</line>
+			<frame>
+				<reportElement x="0" y="0" width="234" height="74" uuid="0f2ca45b-4d59-49e4-8b1e-d11120e28fde"/>
+				<image isUsingCache="false">
+					<reportElement x="3" y="12" width="230" height="50" uuid="d6ec4c69-2ae1-4879-b8ab-568ad084497b"/>
+					<imageExpression><![CDATA["./hapa_logo.jpg"]]></imageExpression>
+				</image>
+			</frame>
+			<line>
+				<reportElement x="395" y="0" width="1" height="111" uuid="ac2d51a1-9f0d-4d6f-a7d7-907041b2fc18"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="76" width="233" height="67" uuid="196e99ff-b841-47f5-8bec-0f995c00a548"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="20" isBold="true" pdfFontName="fonts/malgunbd.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[D/O 발급 확인서]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="235" y="1" width="100" height="20" uuid="1fbec3cc-fe17-4fda-84c5-5dd4c1b8cdf1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[B/L No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="235" y="39" width="100" height="20" uuid="6260ddfb-0620-4a7c-97cd-58d9c917b542"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VESSEL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="396" y="0" width="100" height="20" uuid="a2ab7402-111a-481b-89d0-72240e191464"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[I/E]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="396" y="39" width="100" height="20" uuid="baf22802-3dcd-44f1-8066-c9459098d0a9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VOYAGE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="235" y="74" width="100" height="20" uuid="23f36da7-2864-4c34-9413-4869f82de59f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[POL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="235" y="111" width="100" height="20" uuid="de8103d9-b6a6-437c-a6c0-5b1ce3000620"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[STATUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="396" y="75" width="100" height="20" uuid="62f5c8ae-88b5-44d6-b2d9-9817b1a852a8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[POD]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="235" y="18" width="160" height="20" uuid="1001226d-fadd-4927-a75a-4ac96f9bf948"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{bl_bkg}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="18" width="158" height="20" uuid="cb39ca72-d8a5-4cf5-a28e-557593debea1"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{ie_type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="235" y="55" width="160" height="20" uuid="3ab2dc2f-5aca-464f-9531-8889d501e3ad"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{vsl_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="54" width="158" height="20" uuid="72709ae2-4b90-4c2e-880a-5d3eb481426d"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{voyage}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="90" width="158" height="20" uuid="7ebdb8c7-9768-4224-a915-0f889f9d4c4f"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{pod}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="235" y="122" width="319" height="20" uuid="27cda730-d084-4613-ad70-cf3ec85a99a0"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{last_current}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="235" y="91" width="160" height="20" uuid="d99a62f7-cfd1-4d52-83f9-7b51b76b0c88"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{pol}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="235" y="39" width="321" height="1" uuid="afab70ba-14df-4cb9-aadf-427eefca9f25"/>
+			</line>
+			<line>
+				<reportElement x="235" y="75" width="321" height="1" uuid="97d5a81a-78cc-4281-a609-9a7bff1db7ff"/>
+			</line>
+			<line>
+				<reportElement x="234" y="111" width="321" height="1" uuid="aab1b109-1dd3-4454-8901-f094d2177187"/>
+			</line>
+			<line>
+				<reportElement x="235" y="142" width="321" height="1" uuid="3f5416bd-8f32-443b-a471-5a7ec0a2077c"/>
+			</line>
+			<line>
+				<reportElement x="234" y="0" width="321" height="1" uuid="3673b097-0ff9-4bb8-a4bc-9f35f282738f"/>
+			</line>
+			<line>
+				<reportElement x="554" y="0" width="1" height="802" uuid="94013cc2-9a9f-4aea-be0a-65c64566e069"/>
+			</line>
+			<line>
+				<reportElement x="1" y="1" width="1" height="801" uuid="89c8d999-08ca-49c8-a678-3a9b46cd6f36"/>
+			</line>
+			<line>
+				<reportElement x="2" y="0" width="232" height="1" uuid="eff7de93-8fec-4d42-958e-1f06deb32ecb"/>
+			</line>
+			<line>
+				<reportElement x="2" y="142" width="232" height="1" uuid="890c9d94-a767-44b2-9caf-80b609e37320"/>
+			</line>
+			<line>
+				<reportElement x="2" y="801" width="552" height="1" uuid="d50e341c-a7ea-4085-bef7-1946b764eafe"/>
+			</line>
+			<frame>
+				<reportElement x="2" y="143" width="154" height="35" uuid="9f00754e-9393-4026-bc54-3c3383746ce0"/>
+				<staticText>
+					<reportElement x="1" y="0" width="100" height="20" uuid="54515161-362b-4d75-a2c4-9d455c8d95b4"/>
+					<text><![CDATA[POL]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="54" y="14" width="100" height="20" uuid="fce1c6f6-68f6-4433-bdba-746cf9b9a98b"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<textFieldExpression><![CDATA[$F{pol}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement x="156" y="143" width="161" height="35" uuid="d52c6767-0dae-4b73-9af3-ef341c4ecc2d"/>
+				<staticText>
+					<reportElement x="1" y="0" width="100" height="20" uuid="2812a70e-4aa5-49ff-a3fc-299c58e40aa6"/>
+					<text><![CDATA[ETD]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="61" y="14" width="100" height="20" uuid="4758eee5-6518-4a65-a08d-f5bb530da7a4"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<textFieldExpression><![CDATA[$F{pol_atd}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement x="2" y="178" width="154" height="35" uuid="52822ae8-8f24-4afb-b94d-b7e80de717c3"/>
+				<staticText>
+					<reportElement x="1" y="0" width="100" height="20" uuid="170a45ae-5434-4f59-80bc-279f1cfc6977"/>
+					<text><![CDATA[POD]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="54" y="14" width="100" height="20" uuid="0fcafb37-99ad-48bc-ab34-bce8cf047821"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<textFieldExpression><![CDATA[$F{pod}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement x="156" y="178" width="161" height="35" uuid="386645d1-d1f8-4302-9a5e-168ff31c8523"/>
+				<staticText>
+					<reportElement x="1" y="0" width="100" height="20" uuid="ca900a3c-811b-40af-997e-7c3cde2c6cbf"/>
+					<text><![CDATA[ETA]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="61" y="14" width="100" height="20" uuid="185d211f-ebf4-46f4-9d76-4b6696adc8bf"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<textFieldExpression><![CDATA[$F{pod_ata}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<line>
+				<reportElement x="3" y="212" width="314" height="1" uuid="64088c52-815e-477b-8670-d48569bdd8d6"/>
+			</line>
+			<line>
+				<reportElement x="3" y="177" width="314" height="1" uuid="a8d337d9-96c1-4869-89ef-c95ec5e7d706"/>
+			</line>
+			<line>
+				<reportElement x="156" y="143" width="1" height="69" uuid="4e07e62c-a62d-4c0a-bb0f-ea24ad812ffd"/>
+			</line>
+			<elementGroup>
+				<componentElement>
+					<reportElement x="317" y="164" width="236" height="50" uuid="d42d08e7-982b-4fcc-9480-8f7bc4bb5a3c"/>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="cntr_list" uuid="6ef742bb-5e74-41c0-a165-d8bcb3c156e7">
+							<datasetParameter name="req_seq">
+								<datasetParameterExpression><![CDATA[$P{req_seq}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="bl_bkg">
+								<datasetParameterExpression><![CDATA[$P{bl_bkg}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:listContents height="50" width="236">
+							<frame>
+								<reportElement x="0" y="0" width="78" height="20" uuid="c4fcdd62-ec9c-40d4-a762-995e60fb1f5d"/>
+								<textField>
+									<reportElement x="0" y="0" width="77" height="20" uuid="1bfe9d10-57f4-47ce-996a-28f22aedd245"/>
+									<textElement textAlignment="Center"/>
+									<textFieldExpression><![CDATA[$F{cntr_no}]]></textFieldExpression>
+								</textField>
+							</frame>
+							<frame>
+								<reportElement x="78" y="0" width="75" height="20" uuid="35fd7f95-d4ad-46d3-94e2-f4ef483eca32"/>
+								<textField>
+									<reportElement x="0" y="0" width="75" height="20" uuid="324d93be-25a6-4c5b-94ca-c501b386af20"/>
+									<textElement textAlignment="Center"/>
+									<textFieldExpression><![CDATA[$F{dem_date}]]></textFieldExpression>
+								</textField>
+							</frame>
+							<frame>
+								<reportElement x="153" y="0" width="83" height="20" uuid="415eeec9-c932-4c12-9051-37a5e7e953fd"/>
+								<textField>
+									<reportElement x="0" y="0" width="83" height="20" uuid="0bed884b-fecc-4675-8a33-fe5ce468195d"/>
+									<textElement textAlignment="Center"/>
+									<textFieldExpression><![CDATA[$F{dem_total}]]></textFieldExpression>
+								</textField>
+							</frame>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
+			</elementGroup>
+			<staticText>
+				<reportElement x="3" y="313" width="314" height="444" uuid="9b46aacc-fde1-4912-a72f-773078320b8f"/>
+				<textElement>
+					<font fontName="SansSerif" pdfFontName="fonts/malgun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[*** 입금표 출력 ***
+해상수입 > INVOICE > 인보이스내역관리 에서 출력 가능
+(입항 1주일전 날짜부터 조회 희망)
+
+* 선사 기본 FREETIME 및 요율안내 (기본계약건만 해당)
+반납 기준 COMBINED FREE TIME (입항일 제외, 공휴일 포함)
+
+- 일 반 컨테이너 : 반납까지 CALENDAR 10 DAYS -
+( 기본 FREE TIME 이후 5일 단위로 금액변경 /DAY 당 금액/KRW)
+
+*** 입금표 출력 ***
+해상수입 > INVOICE > 인보이스내역관리 에서 출력 가능
+(입항 1주일전 날짜부터 조회 희망)
+
+* 선사 기본 FREETIME 및 요율안내 (기본계약건만 해당)
+반납 기준 COMBINED FREE TIME (입항일 제외, 공휴일 포함)
+
+- 일 반 컨테이너 : 반납까지 CALENDAR 10 DAYS -
+( 기본 FREE TIME 이후 5일 단위로 금액변경 /DAY 당 금액/KRW)
+
+*** 입금표 출력 ***
+해상수입 > INVOICE > 인보이스내역관리 에서 출력 가능
+(입항 1주일전 날짜부터 조회 희망)
+
+* 선사 기본 FREETIME 및 요율안내 (기본계약건만 해당)
+반납 기준 COMBINED FREE TIME (입항일 제외, 공휴일 포함)
+
+- 일 반 컨테이너 : 반납까지 CALENDAR 10 DAYS -
+( 기본 FREE TIME 이후 5일 단위로 금액변경 /DAY 당 금액/KRW)
+]]></text>
+			</staticText>
+			<frame>
+				<reportElement x="318" y="143" width="235" height="20" uuid="0ca3411c-e2d2-416b-a330-de3f66d30cfc"/>
+				<staticText>
+					<reportElement x="0" y="0" width="78" height="20" uuid="f2fa911c-8157-482d-9fc1-917c7ff16b23"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[CNTR]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement x="396" y="143" width="74" height="20" uuid="71138551-b359-40cc-808b-bdb6b132d423"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DEM DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="470" y="143" width="83" height="20" uuid="e7dbb9bf-8dfd-421a-8d47-ee497d660296"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

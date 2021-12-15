@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="/report/js/jquery-3.6.0.slim.js" ></script>
+        <script type="text/javascript" src="/report/js/pdfobject/2.2.4/pdfobject.min.js"></script>
+        <script src="/report/js/bootstrap/3.3.2/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/report/css/4.5.2/bootstrap.min.css">
+        <% if( report ) {%>
+        <script type="text/javascript">
+            
+            // function getReportViewer() {
+            //     getReport(report);
+            // }
+
+            // Onload 처리
+            window.onload = function() {
+                downloadReport();
+                // $("#content").html('C:\Users\User\Downloads\downloadFile (1).html');
+            }
+
+            function downloadReport() {
+                try{
+                    // console.log( JSON.stringify('<%- report %>') )
+                    const jasper = JSON.parse('<%- JSON.stringify(report) %>');
+                    console.log(">>>>>>>>>>>>>>>>>",jasper);
+                    if( '' == jasper.file_path ) {
+                        alert("file_path 값이 정의되지 않았습니다. 다시 확인하세요.");
+                        return false;
+                    }
+                    if( '' == jasper.file_type ) {
+                        alert("file_type 값이 정의되지 않았습니다. 다시 확인하세요.");
+                        return false;
+                    }
+                    if( '' == jasper.connection ) {
+                        alert("connection 값이 정의되지 않았습니다. 다시 확인하세요.");
+                        return false;
+                    }
+
+                    let full_path = ''
+                    if( window.location.hostname == 'localhost') {
+                        full_path = '/DATA/KLNET/OWNER/REPORTS/'+jasper.file_path+'/'+jasper.file_id;
+                    } else if ( window.location.hostname == 'devpaper.plism.com' ) {
+                        full_path = '/OWNER/REPORTS/'+jasper.file_path+'/'+jasper.file_id;
+                    } else if ( window.location.hostname == 'devbooking.plism.com' ) {
+                        full_path = '/OWNER/REPORTS/'+jasper.file_path+'/'+jasper.file_id;
+                    } else if ( window.location.hostname == 'booking.plism.com' ) {
+                        full_path = '/OWNER/REPORTS/'+jasper.file_path+'/'+jasper.file_id;
+                    } else if ( window.location.hostname == 'booking.plism.com' ) {
+                        full_path = '/OWNER/REPORTS/'+jasper.file_path+'/'+jasper.file_id;
+                    }
+
+                    let url = '/report/generate_'+jasper.file_type;
+                    let options = {
+                        method:'POST',
+                        url:'/report/generate_'+jasper.file_type,
+                        headers:{
+                            'cache-control':'no-cache',
+                            'content-type':'application/json'
+                        },
+                        body:JSON.stringify({
+                            // name:file_id,
+                            file_path:full_path,
+                            connection:jasper.connection,
+                            parameters:jasper.parameters,
+                            responseType:'blob'
+                        })
+                    }
+                    console.log(options);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/report/generate_'+jasper.file_type, true);
+                    xhr.timeout = 60*1000;
+                    xhr.responseType = 'text';
+                    // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.onreadystatechange = function() {
+                        if( this.readyState == 4 ) {
+                            if( this.status == 200 ) {
+                                document.getElementById('content').innerHTML = this.responseText;
+                            }
+                        }
+                    }
+                    xhr.onload = function() {
+
+
+
+                        // const contentType = xhr.getResponseHeader('Content-Type');
+                        // const blob = new Blob([this.response], {type:contentType});
+                        // console.log("1")
+                        // const url = window.URL || window.webktURL;
+                        // const fileUrl = url.createObjectURL(blob);
+                        // console.log(fileUrl)
+                        // const anchor = document.createElement('a');
+                        // console.log("2")
+                        // if( typeof anchor.download === 'undefined' ) {
+                        //     window.location = fileUrl;
+                        // } else {
+                        //     console.log("4")
+                        //     anchor.href = fileUrl;
+                        //     anchor.download = 'downloadFile.'+jasper.file_type;
+                        //     $("#content").load( anchor)
+                        //     // document.getElementById('content').innerHTML = anchor;
+                        //     document.body.appendChild(anchor);
+                        //     anchor.click();
+                        // }
+                        // console.log("5")
+                        // setTimeout(function() {
+                        //     console.log("6")
+                        //     url.revokeObjectURL(fileUrl);
+                        //     $(anchor).remove();
+                        // }, 100);
+                    }
+                    var params = JSON.stringify({
+                            // name:file_id,
+                            file_path:full_path,
+                            connection:jasper.connection,
+                            parameters:jasper.parameters,
+                            responseType:'blob'
+                        });
+                    xhr.setRequestHeader('Content-Type','application/json');
+                    xhr.send(params);
+                } catch( error ) {
+                    console.log(error)
+                    alert("JSON 형태가 아닙니다. 다시 확인하세요.");
+                    return false;
+                }
+            }
+        </script>
+        <% } %>
+    </head>
+    <title>
+        Viewer
+    </title>
+    <main>
+        <div class="bg-light me-md-3 pt-3 px-3 px-md-5 text-center overflow-hidden">
+            <div class="my-3 py-3">
+                <h2 class="display-5">Report</h2>
+                <h2 class="laed"><%= report.file_id%></h2>
+            </div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Report</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Print</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">PDF</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">PPT</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Word</button>
+                    </div>
+                </div>
+                <!-- <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                    <span data-feader="calendar"></span>
+                    This week
+                </button> -->
+            </div>
+            <div class="bg-light shadow-sm mx-auto" style="width: 95%; height: 700px; border-radius: 15px 15px 15px 15px;">
+                <div class="mx-auto pt-5" id="content">
+                </div>
+                <!-- <link rel="import" href="C:\Users\User\Downloads\downloadFile (1).html"> -->
+            </div>
+        </div>
+
+    </main>
+</html>

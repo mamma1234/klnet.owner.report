@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<style>
+table.jasper {
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    line-height: 1.5;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+  margin : 20px 10px;
+}
+table.jasper th {
+    width: 150px;
+    padding: 10px;
+    font-weight: bold;
+    vertical-align: top;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    background: #eee;
+}
+table.jasper td {
+    width: 550px;
+    padding: 10px;
+    vertical-align: top;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+ul, #myUL {
+  list-style-type: none;
+}
+
+#myUL {
+  margin: 0;
+  padding: 0;
+}
+
+.caret {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+  font-weight: bold;
+  font-size: 20px;
+
+}
+
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.caret-down::before {
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Safari */'
+  transform: rotate(90deg);  
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.nested {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+</style>
+<html>
+    <head>
+        <script type="text/javascript">
+            function changeToColor(td, oldColor, newColor) {
+                td.style.backgroundColor = newColor;
+                td.onmouseout=function(){
+                    td.style.backgroundColor = oldColor;
+                }
+            }
+
+            function clickEvent(obj) {
+                // file_type : [pdf] 다운로드할 파일타입(pdf, html, csv, xlsx, odt, pptx, rtf) 중 택 1
+                // file_path : [SCRAP/PGSQL_1.jrxml] jasper File 위치 /DATA/KLNET/OWNER/REPORTS/ 이하 경로
+                // connection : [pgsql] jasper report DB 접속 정보(oracle, pgsql)
+                // parameters:{
+                // 		'user_no':auth.getUser().userno,
+                // 		'line_code':scrapLineCode.line_code,
+                // 		'carrier_code':scrapLineCode.customs_line_code
+                // 	} jasper 파일 파라미터
+                var jsonParams = {};
+                console.log(obj.folder)
+                jsonParams.file_type = 'pdf';
+                jsonParams.file_path = obj.id;
+                jsonParams.connection = 'pgsql';
+                jsonParams.parameters = {param1:'data1', param2:'data2'};
+                console.log(jsonParams);
+                document.getElementById('jrxml').value = obj.id;
+                document.getElementById('jsonTextArea').value = JSON.stringify(jsonParams, undefined, 2);
+            }
+
+            function downloadReport() {
+                /*
+                let options = {
+                    method:'POST',
+                    url:host+'/report/generate_'+jasper.file_type,
+                    headers:{
+                        'cache-control':'no-cache',
+                        'content-type':'application/json'
+                    },
+                    body:JSON.stringify({
+                        // name:file_id,
+                        file_path:full_path,
+                        connection:jasper.connection,
+                        parameters:jasper.parameters,
+                        responseType:'blob'
+                    })
+                }
+                */
+                let jasper = JSON.parse(document.getElementById('jsonTextArea').value);
+                console.log(window.location.hostname);
+                let full_path = ''
+                if( window.location.hostname == 'localhost') {
+                    full_path = '/DATA/KLNET/OWNER/REPORTS/'+jasper.file_path;
+                } else if ( window.location.hostname == 'dev.plismplus.com' ) {
+                    full_path = '/OWNER/REPORTS/';
+                } else if ( window.location.hostname == 'www.plismplus.com' ) {
+                    full_path = '/OWNER/REPORTS/'+jasper.file_path;
+                }
+
+                let url = '/report/generate_'+jasper.file_type;
+                let options = {
+                    method:'POST',
+                    url:'/report/generate_'+jasper.file_type,
+                    headers:{
+                        'cache-control':'no-cache',
+                        'content-type':'application/json'
+                    },
+                    body:JSON.stringify({
+                        // name:file_id,
+                        file_path:full_path,
+                        connection:jasper.connection,
+                        parameters:jasper.parameters,
+                        responseType:'blob'
+                    })
+                }
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/report/generate_'+jasper.file_type, true);
+                xhr.timeout = 60*1000;
+                xhr.responseType = 'blob';
+                // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function() {
+                    const contentType = xhr.getResponseHeader('Content-Type');
+                    const blob = new Blob([this.response], {type:contentType});
+
+                    const url = window.URL || window.webktURL;
+                    const fileUrl = url.createObjectURL(blob);
+                    const anchor = document.createElement('a');
+
+                    if( typeof anchor.download === 'undefined' ) {
+                        window.location = fileUrl;
+                    } else {
+                        anchor.href = fileUrl;
+                        anchor.download = 'downloadFile.'+jasper.file_type;
+                        document.body.appendChild(anchor);
+                        anchor.click();
+                    }
+
+                    setTimeout(function() {
+                        url.revokeObjectURL(fileUrl);
+                        $(anchor).remove();
+                    }, 100);
+                }
+                var params = JSON.stringify({
+                        // name:file_id,
+                        file_path:full_path,
+                        connection:jasper.connection,
+                        parameters:jasper.parameters,
+                        responseType:'blob'
+                    });
+                xhr.setRequestHeader('Content-Type','application/json');
+                xhr.send(params);
+
+                // $.ajax({
+                //     url:'/report/generate_'+jasper.file_type,
+                //     type:'POST',
+                //     data:JSON.stringify({
+                //         // name:file_id,
+                //         file_path:full_path,
+                //         connection:jasper.connection,
+                //         parameters:jasper.parameters,
+                //         responseType:'blob'
+                //     }),
+                //     contentType:'application/json',
+                //     success:function(data) {
+
+                //     }
+                // });
+            }
+
+        </script>
+        <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+    </head>
+    <title>
+        Jasper Report Server
+    </title>
+    <body>
+        <h3>현재 서버 [*.JRXML] 정보 입니다.</h3>
+        <h4>위치 : /DATA/KLNET/OWNER/REPORTS</h4><br>
+        <div style="height: 200px;" >
+
+        <table class='jasper'>
+            <tr>
+                <th>폴더구조</th>
+            </tr>
+            <tr>
+                <td>
+                    <ul id="myUL1">
+                        <li>
+                            <span class="caret">/OWNER/DATA/KLNET/REPORTS</span>
+                                <ul class="nested">
+                                <%
+                                for( var i=0; i<rows.length; i++) {
+                                    var data = rows[i];
+                                %>
+                                    <li> <span class=caret><%=data.folder%></span>
+                                        <ul class="nested">
+                                            <%=console.log(data.jrxml);%>
+                                            <li><%=data.jrxml%></li>
+                                        </ul>
+                                    </li>
+                                <%}%>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                      <script>
+                        var toggler = document.getElementsByClassName("caret");
+                        var i;
+                        
+                        for (i = 0; i < toggler.length; i++) {
+                          toggler[i].addEventListener("click", function() {
+                            this.parentElement.querySelector(".nested").classList.toggle("active");
+                            this.classList.toggle("caret-down");
+                          });
+                        }
+                    </script>
+                </td>
+            </tr>
+        </table>
+        <table class='jasper'>
+            <tr>
+                <th>폴더명</th>
+                <th>JRXML</th>
+            </tr>
+            <%
+            for( var i=0; i<rows.length; i++) {
+                var data = rows[i];
+            %>
+            <tr>
+                <td><%=data.folder%></td>
+                <td id=<%=data.folder%>/<%=data.jrxml%>
+                    onclick="javascript:clickEvent(this)"
+                    onmouseover="javascript:changeToColor(this,'#FFFFFF','#F4FFFD')">
+                    <a href="#"><%=data.jrxml%></a> 
+                </td>
+            </tr>
+            <%}%>
+            <tr >
+                <td colspan="1">
+                    <label>예제를 보고 파라미터를 정의 후 다운로드하세요</label>
+                    <input id="jrxml" style="margin: 0px; height: 20px; width: 95%;"></input>
+                    <br>
+                    <textarea id="jsonTextArea" 
+                        style="margin: 0px; height: 500px; width: 95%; font-size: 20px;">
+                    </textarea>
+                </td>
+                <td colspan="1">
+                    <label>예제입니다.</label>
+                    <input id="jrxml" style="margin: 0px; height: 20px; width: 95%;" value='파라미터 설명' readonly></input>
+                    <br>
+                    <textarea id="jsonTextArea1" readonly
+                        style="margin: 0px; height: 500px; width: 95%; font-size: 20px; color: red;">
+{
+    file_type : 'pdf'
+    (pdf, html, csv, xlsx, odt, pptx, rtf)
+    file_path : 'SCRAP/PGSQL_1.jrxml'
+    jasper File 위치 /DATA/KLNET/OWNER/REPORTS/ 이하 경로
+    connection : [pgsql]
+    jasper report DB 접속 정보(oracle, pgsql)
+    parameters:{
+    'user_no':auth.getUser().userno,
+    'line_code':scrapLineCode.line_code,
+    'carrier_code':scrapLineCode.customs_line_code
+    }
+    jasper Report DB Parameters
+}
+                    </textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" >
+                    <button onclick="javascript:downloadReport()">REPORT DOWNLOAD</button>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

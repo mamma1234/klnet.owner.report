@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fontFamilies>
+	<fontFamily name="맑은 고딕">
+		<normal>![CDATA[fonts/malgun.ttf]]</normal>
+		<bold>![CDATA[fonts/malgunbd.ttf]]</bold>
+		<Semilight>![CDATA[fonts/malgun.ttf]]</Semilight>
+		<pdfEncoding>![CDATA[Identity-H]]</pdfEncoding>
+		<pdfEmbedded>![CDATA[true]]</pdfEmbedded>
+		<!--
+		<exportFonts>
+			<export key="net.sf.jasperreports.html">
+			Gentium, 'Times new Roman', Times, serif
+			</export>
+		</exportFonts>
+		-->
+	</fontFamily>
+</fontFamilies>
